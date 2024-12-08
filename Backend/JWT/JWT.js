@@ -6,7 +6,7 @@ export const generatewebtoken = async (new_user, res) => {
     })
     res.cookie("jwt", Token, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "lax",
         path: "/"
     })
