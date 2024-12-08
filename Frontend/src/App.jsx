@@ -11,24 +11,17 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("jwt"));
   const navigate = useNavigate();
 
-  // Sync token state with localStorage whenever it changes
+  // Update token state if it's changed
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
     setToken(storedToken);
-  }, []); 
-
-  // Update token in localStorage and state after login
-  const handleLoginSuccess = (newToken) => {
-    localStorage.setItem("jwt", newToken);
-    setToken(newToken); // Trigger a re-render
-    navigate("/"); // Redirect to Home after successful login
-  };
+  }, []); // Run once on component mount
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={token ? <Home /> : <Login handleLoginSuccess={handleLoginSuccess} />} />
-        <Route path="/login" element={<Login handleLoginSuccess={handleLoginSuccess} />} />
+        <Route path="/" element={token ? <Home /> : <Login setToken={setToken} />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/logout" element={<Logout setToken={setToken} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<PageNotFound />} />
