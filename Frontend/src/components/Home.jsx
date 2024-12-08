@@ -12,7 +12,7 @@ function Home() {
         const fetchTodos = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get("http://localhost:3000/todo/fetch", {
+                const response = await axios.get("https://todo-app-6kxd.onrender.com/todo/fetch", {
                     withCredentials: true,
                     headers: {
                         "Content-Type": "application/json"
@@ -36,7 +36,7 @@ function Home() {
         if (!newTodo)
             return;
         try {
-            const response = await axios.post("http://localhost:3000/todo/create", {
+            const response = await axios.post("https://todo-app-6kxd.onrender.com/todo/create", {
                 text: newTodo,
                 completed: false
             }, {
@@ -55,7 +55,7 @@ function Home() {
     const createStatus = async (id) => {
         const todo = todos.find((t) => t._id === id)
         try {
-            const response = await axios.put(`http://localhost:3000/todo/update/${id}`, {
+            const response = await axios.put(`https://todo-app-6kxd.onrender.com/todo/update/${id}`, {
                 ...todo,
                 complete: !todo.complete
             }, {
@@ -72,7 +72,7 @@ function Home() {
 
     const deleteTodo = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/todo/delete/${id}`, {
+            await axios.delete(`https://todo-app-6kxd.onrender.com/todo/delete/${id}`, {
                 withCredentials: true
             });
 
@@ -87,7 +87,7 @@ function Home() {
     const logout = async () => {
 
         try {
-            const response = await axios.get("http://localhost:3000/user/logout",{
+            const response = await axios.get("https://todo-app-6kxd.onrender.com/user/logout",{
                 withCredentials: true
             });
             toast.success(response.data.message);
