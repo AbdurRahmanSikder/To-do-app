@@ -11,17 +11,16 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("jwt"));
   const navigate = useNavigate();
 
-  // Update token state if it's changed
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
     setToken(storedToken);
-  }, []); // Run once on component mount
+  }, []);
 
   return (
     <div>
       <Routes>
-        <Route path="/" element={token ? <Home /> : <Login setToken={setToken} />} />
-        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/" element={token ? <Home /> : <Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout setToken={setToken} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<PageNotFound />} />
