@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-function Login() {
+function Login({ setToken }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigateTo = useNavigate();
@@ -27,6 +27,9 @@ function Login() {
             
             // Store the JWT token in localStorage for persistent authentication
             localStorage.setItem("jwt", response.data.token);
+
+            // Update state in App.js to reflect authentication
+            setToken(response.data.token);
 
             // Redirect user to the home page after successful login
             navigateTo("/");
