@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
     setToken(storedToken);
-  }, []); // Only run once on mount
+  }, [token]); 
 
   // Update token in localStorage and state after login
   const handleLoginSuccess = (newToken) => {
