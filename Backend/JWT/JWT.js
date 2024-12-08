@@ -7,7 +7,7 @@ export const generatewebtoken = async (new_user, res) => {
     res.cookie("jwt", Token, {
         httpOnly: true,
         secure: true,
-        sameSite: "lax",
+        sameSite: "none",
         path: "/"
     })
     await User.findByIdAndUpdate(new_user, { token: Token });
