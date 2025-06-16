@@ -1,30 +1,23 @@
 import express from "express";
-const app = express();
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import connectDB from "./configs/db.js";
 import route from "./routes/Todo.route.js";
 import userRoute from "./routes/User.route.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 dotenv.config();
-const URI = process.env.MONGODB_URI;
+
+
+await connectDB();
+const app = express();
+const allowedOrigin = ['http://localhost:5173'];
 const PORT = process.env.PORT || 4000;
-try {
-    mongoose.connect(URI);
-    console.log(`MongoDB connected`);
-}
-catch (error){
-    console.log(error);
-}
 app.get('/', (req, res) => {
-    res.send("Hello worlds!!");
+     res.send("Api is working!!!");
 });
 app.use(cors({
-    origin: process.env.Forntend_URL,
+    origin: allowedOrigin,
     credentials: true,
-    methods:"GET,POST,PUT,DELETE",
-    allowedHeaders: ["Content-Type" , "Authorization"]
-
 }))
 app.use(cookieParser());
 app.use(express.json());
