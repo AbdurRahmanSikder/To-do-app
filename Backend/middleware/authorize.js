@@ -6,13 +6,13 @@ export const authorization = async (req, res, next) => {
         if (!token) {
             return res.json({success: true , message: error.message});
         }
-        const tokenDecode = jwt.verify(token, process.env.JWT_SECRETE);
+        const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
         
         req.user = {id:tokenDecode.id};
+        next();
 
     }
     catch (error) {
         console.log(error);
     }
-    next();
 }

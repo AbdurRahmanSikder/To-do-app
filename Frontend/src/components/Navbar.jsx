@@ -5,13 +5,14 @@ import { useAppContext } from '../context/AppContext'
 import toast from 'react-hot-toast'
 
 const Navbar = () => {
-    const { axios, setUserLogin, userLogin } = useAppContext();
+    const { axios,setTodos, setUserLogin, userLogin } = useAppContext();
     const logout = async () => {
         try {
             const { data } = await axios.get('/user/logout');
             if (data.success) {
                 toast.success(data.message);
                 setUserLogin(false);
+                setTodos([]);
             }
             else
                 toast.error(data.message);
