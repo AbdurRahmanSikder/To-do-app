@@ -10,7 +10,7 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 await connectDB();
-const allowedOrigin = ['http://localhost:5173'];
+const allowedOrigin = ['http://localhost:5173' , 'https://todo-app-040.vercel.app'];
 const PORT = process.env.PORT || 4000;
 app.get('/', (req, res) => {
      res.send("Api is working!!!");
