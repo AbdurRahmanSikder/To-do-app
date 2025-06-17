@@ -3,28 +3,37 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAppContext } from '../context/AppContext';
 const Login = () => {
-    const { axios, navigate,setUserLogin } = useAppContext();
+    const { axios, navigate, setUserLogin, setUserName } = useAppContext();
     const [state, setState] = React.useState("login");
-    const [name, setName] = React.useState("");
-    const [email, setEmail] = React.useState("a@gmail.com");
-    const [password, setPassword] = React.useState("123");
+    const [email, setEmail] = React.useState("belal@gmail.com");
+    const [password, setPassword] = React.useState("123456");
+    const [username, setName] = React.useState("Belal");
 
     const onSubmitHandler = async (e) => {
         try {
             e.preventDefault();
-        
-            const {data} = await axios.post(`/user/${state}`, { email, password });
-            navigate('/')
-            setUserLogin(true);
+            console.log(username);
+            const { data } = await axios.post(`/user/${state}`, { email, password, username });
             console.log(data);
+            if (data.success) {
+                navigate('/')
+                setUserLogin(true);
+                setUserName(data.user.username);
+                toast.success(data.message);
+            }
+            else {
+                toast.error(data.message);
+                setUserLogin(false);
+            }
         }
         catch (error) {
+            setUserLogin(false);
             console.log(error);
         }
     }
 
     return (
-        <div className = 'fixed top-0 bottom-0 left-0 right-0 z-10 flex items-center bg-black/50' >
+        <div className='fixed top-0 bottom-0 left-0 right-0 z-10 flex items-center bg-black/50' >
             <form onSubmit={onSubmitHandler} onClick={(e) => e.stopPropagation()} className="flex flex-col gap-4 m-auto  items-start p-8 py-12 w-80 sm:w-[352px] rounded-lg shadow-xl border border-gray-200 bg-white">
                 <p className="text-2xl font-medium m-auto">
                     <span className="text-indigo-500">User</span> {state === "login" ? "Login" : "Sign Up"}
@@ -32,7 +41,7 @@ const Login = () => {
                 {state === "register" && (
                     <div className="w-full">
                         <p>Name</p>
-                        <input onChange={(e) => setName(e.target.value)} value={name} placeholder="type here" className="border border-gray-200 rounded w-full p-2 mt-1 outline-indigo-500" type="text" required />
+                        <input onChange={(e) => setName(e.target.value)} value={username} placeholder="type here" className="border border-gray-200 rounded w-full p-2 mt-1 outline-indigo-500" type="text" required />
                     </div>
                 )}
                 <div className="w-full ">

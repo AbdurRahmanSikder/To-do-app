@@ -2,23 +2,21 @@ import React, { useState } from 'react';
 import { useAppContext } from '../context/AppContext';
 import send_icon from '../assets/send_icon.svg';
 import toast from 'react-hot-toast';
-
 const Data = () => {
-  const { axios, todos, setTodos } = useAppContext();
+  const { axios, todos, setTodos, filterTodos } = useAppContext();
   const [text, setText] = useState("");
   const [editIndex, setEditIndex] = useState(null); // Track which todo is being edited
   const [editText, setEditText] = useState("");     // Store edited text
-
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post('/todo/create', { text });
       if (data.success) {
         toast.success(data.message);
-        const newTodos = [{text},...todos];
+        const newTodos = [...todos, { text }];
         setTodos(newTodos);
         setText("");
-        
+
         // Optionally fetch updated list from DB
       } else {
         console.log(data.error);
@@ -28,17 +26,17 @@ const Data = () => {
     }
   };
   const onDelete = async (id) => {
-    try{
+    try {
 
-      const {data} = await axios.delete(`/todo/delete/${id}`);
-      if(data.success) {
+      const { data } = await axios.delete(`/todo/delete/${id}`);
+      if (data.success) {
         toast.success(data.message);
         const newTodos = todos.filter(todo => todo._id != id);
         setTodos(newTodos);
       }
       else console.log(data.error);
     }
-    catch(error) {
+    catch (error) {
       console.log(error);
     }
   }
@@ -51,6 +49,18 @@ const Data = () => {
         newTodos[index].text = editText;
         setTodos(newTodos);
         setEditIndex(null);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const onToggleComplete = async (id, index, currentStatus) => {
+    try {
+      const { data } = await axios.put(`/todo/update/${id}`, { complete: !currentStatus });
+      if (data.success) {
+        const updatedTodos = [...todos];
+        updatedTodos[index].complete = !currentStatus;
+        setTodos(updatedTodos);
       }
     } catch (error) {
       console.error(error);
@@ -78,11 +88,17 @@ const Data = () => {
 
       {/* Todo List */}
       <ul className="mt-6 space-y-3">
-        {todos.map((todo, index) => (
+        {filterTodos.map((todo, index) => (
           <li
             key={todo._id}
             className="flex justify-between items-center bg-white shadow-sm p-3 rounded-md border border-gray-200"
           >
+            <input
+              type="checkbox"
+              checked={todo.complete}
+              onClick={() => onToggleComplete(todo._id, index, todo.complete)}
+              className="mr-3 w-5 h-5 accent-green-500 cursor-pointer"
+            />
             {
               editIndex === index ? (
                 <input
@@ -91,7 +107,9 @@ const Data = () => {
                   className="flex-1 border-b border-gray-300 outline-none text-sm mr-3"
                 />
               ) : (
-                <span className="text-gray-800 flex-1">{todo.text}</span>
+                <span className={`flex-1 text-sm ${todo.complete ? 'line-through text-gray-400' : 'text-gray-800'}`}>
+                  {todo.text}
+                </span>
               )
             }
             <div className="flex space-x-2">
@@ -111,7 +129,8 @@ const Data = () => {
                   >Edit</button>
                 )
               }
-              <button onClick={() => onDelete(todo._id)}
+              <button
+                onClick={() => onDelete(todo._id)}
                 className="text-sm px-3 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-all"
               >Delete</button>
             </div>

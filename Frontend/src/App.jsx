@@ -6,20 +6,14 @@ import { useAppContext } from './context/AppContext';
 import Login from './pages/Login';
 import Navbar from './components/Navbar';
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
   const {userLogin} = useAppContext();
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-  }, []);
-
-  return (
-    <div>
+   return (
+    <div >
       <Toaster />
       { userLogin? null : <Login /> }
       <Navbar />
       <Routes>
-        <Route path="/" element={userLogin? <Home /> : <Login />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </div>
   );

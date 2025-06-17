@@ -2,7 +2,7 @@ import TODO from "../model/Todo.model.js";
 
 export const createTodo = async (req, res) => {
     try {
-        console.log(req.body);
+        
         const todo = new TODO({
             text: req.body.text,
             complete: req.body.complete,

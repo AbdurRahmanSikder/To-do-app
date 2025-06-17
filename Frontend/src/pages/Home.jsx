@@ -4,7 +4,7 @@ import Data from '../components/Data'
 
 const Home = () => {
   return (
-    <div>
+    <div >
         <Data />
     </div>
   )

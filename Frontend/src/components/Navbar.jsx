@@ -1,11 +1,14 @@
-import React from 'react'
-import logo_img from '../assets/logo.svg'
-import search_icon from '../assets/search_icon.svg'
-import { useAppContext } from '../context/AppContext'
-import toast from 'react-hot-toast'
+import React, { useState } from 'react';
+import logo_img from '../assets/logo.svg';
+import search_icon from '../assets/search_icon.svg';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
+import { NavLink } from 'react-router-dom';
 
 const Navbar = () => {
-    const { axios,setTodos, setUserLogin, userLogin } = useAppContext();
+    const { axios, setTodos, setUserLogin, username, userLogin, setQuery } = useAppContext();
+    const [menuOpen, setMenuOpen] = useState(false);
+
     const logout = async () => {
         try {
             const { data } = await axios.get('/user/logout');
@@ -13,46 +16,93 @@ const Navbar = () => {
                 toast.success(data.message);
                 setUserLogin(false);
                 setTodos([]);
-            }
-            else
+            } else {
                 toast.error(data.message);
-        }
-        catch (error) {
+            }
+        } catch (error) {
             toast.error(error.message);
             console.log(error);
         }
-    }
+    };
+
     return (
-        <nav className="flex items-center justify-between gap-2 px-2 md:px-32 lg:px-48 xl:px-64 border-b border-gray-300 bg-white relative transition-all">
-            <div className='flex md:flex-1 items-center'>
-                <a href="#">
-                    <img className="min-w-24 md:w-36 object-contain" src={logo_img} alt="dummyLogoColored" />
-                </a>
-                <div className="flex items-center text-sm gap-2 w-full max-w-md border border-gray-300 px-3 rounded-sm">
-                    <input className="w-full py-1 md:py-1.5 bg-transparent outline-none placeholder-gray-500" type="text" placeholder="Search" />
-                    <img src={search_icon} alt="" />
+        <nav className="bg-white border-b border-gray-200 px-4 md:px-12 py-3 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                {/* Logo */}
+                <div className="flex items-center gap-3">
+                    <img src={logo_img} alt="Logo" className="w-24 md:w-32 object-contain" />
                 </div>
 
-            </div>
+                {/* Search Bar - always visible */}
+                <div className="flex items-center border border-gray-300 rounded-full px-3 py-1 w-full max-w-md mx-auto flex-1">
+                    <input
+                        onChange={(e) => setQuery(e.target.value)}
+                        type="text"
+                        placeholder="Search"
+                        className="w-full bg-transparent text-sm placeholder-gray-500 outline-none"
+                    />
+                    <img src={search_icon} alt="Search" className="w-4 h-4" />
+                </div>
 
-            <div>
-                {
-                    userLogin ?
-                        <div className='flex items-center gap-4 '>
-                            <p className='text-xl font-semibold'>Hi User!</p>
-                            <button onClick={logout} className="cursor-pointer px-8 py-2 bg-[#8bc020] hover:bg-[#93c52e] transition text-white rounded-full">
+                {/* Desktop Auth Buttons */}
+                <div className="hidden md:flex items-center gap-3">
+                    {userLogin ? (
+                        <>
+                            <p className="text-sm font-medium">Hi {username}!</p>
+                            <button
+                                onClick={logout}
+                                className="bg-[#8bc020] hover:bg-[#93c52e] text-white px-5 py-2 rounded-full text-sm"
+                            >
                                 Logout
                             </button>
+                        </>
+                    ) : (
+                        <NavLink to="/login">
+                            <button className="bg-[#8bc020] hover:bg-[#93c52e] text-white px-5 py-2 rounded-full text-sm">
+                                Login
+                            </button>
+                        </NavLink>
+                    )}
+                </div>
 
-                        </div> : <button className="cursor-pointer px-8 py-2 bg-[#8bc020] hover:bg-[#93c52e] transition text-white rounded-full">
-                            Login
-                        </button>
-                }
+                {/* Mobile menu toggle */}
+                <div className="md:hidden">
+                    <button onClick={() => setMenuOpen(!menuOpen)}>
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2}
+                            viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                                d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-
+            {/* Mobile dropdown auth menu */}
+            {menuOpen && (
+                <div className="md:hidden mt-2 space-y-2">
+                    <div className="flex flex-col items-start gap-2">
+                        {userLogin ? (
+                            <>
+                                <p className="text-sm font-medium">Hi {username}!</p>
+                                <button
+                                    onClick={logout}
+                                    className="bg-[#8bc020] hover:bg-[#93c52e] text-white px-4 py-2 rounded-full text-sm w-full text-left"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <NavLink to="/login" className="w-full">
+                                <button className="bg-[#8bc020] hover:bg-[#93c52e] text-white px-4 py-2 rounded-full text-sm w-full text-left">
+                                    Login
+                                </button>
+                            </NavLink>
+                        )}
+                    </div>
+                </div>
+            )}
         </nav>
-    )
-}
+    );
+};
 
-export default Navbar
+export default Navbar;
