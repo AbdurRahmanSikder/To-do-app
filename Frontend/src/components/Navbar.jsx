@@ -83,7 +83,7 @@ const Navbar = () => {
                     <div className="flex flex-col items-start gap-2">
                         {userLogin ? (
                             <>
-                                <p className="text-sm font-medium">Hi {username}!</p>
+                                <p className="text-sm font-medium">Hi! {username}</p>
                                 <button
                                     onClick={logout}
                                     className="bg-[#8bc020] hover:bg-[#93c52e] text-white px-4 py-2 rounded-full text-sm w-full text-left"
