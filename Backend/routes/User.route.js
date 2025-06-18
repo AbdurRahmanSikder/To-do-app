@@ -4,6 +4,6 @@ import { authorization } from "../middleware/authorize.js";
 const userRoute = express.Router();
 userRoute.post("/login", login);
 userRoute.post("/register", register);
-userRoute.get("/logout", logout);
+userRoute.get("/logout",authorization, logout);
 userRoute.get("/isauth",authorization, isAuth);
 export default userRoute;
