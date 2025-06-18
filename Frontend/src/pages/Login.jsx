@@ -5,9 +5,9 @@ import { useAppContext } from '../context/AppContext';
 const Login = () => {
     const { axios, navigate, setUserLogin, setUserName } = useAppContext();
     const [state, setState] = React.useState("login");
-    const [email, setEmail] = React.useState("belal@gmail.com");
-    const [password, setPassword] = React.useState("123456");
-    const [username, setName] = React.useState("Belal");
+    const [email, setEmail] = React.useState();
+    const [password, setPassword] = React.useState();
+    const [username, setName] = React.useState();
 
     const onSubmitHandler = async (e) => {
         try {
